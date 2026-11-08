@@ -60,7 +60,9 @@ function fitPadding() {
 }
 
 // ---- map ---------------------------------------------------------------
-const map = L.map("map", { zoomControl: false, maxBounds: [[22.8, 89.7], [24.8, 91.2]], minZoom: 10 }).fitBounds(DHAKA_BOUNDS, fitPadding());
+const map = L.map("map", { zoomControl: false, maxBounds: [[22.8, 89.7], [24.8, 91.2]], minZoom: 10 }).setView([23.795, 90.415], 12);
+// A page opened in a hidden pane has no size yet, and fitBounds fails without one.
+if (map.getSize().x > 0) map.fitBounds(DHAKA_BOUNDS, fitPadding());
 L.control.zoom({ position: "topright" }).addTo(map);
 const cartoLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, className: "basemap", attribution: "&copy; OpenStreetMap contributors",
