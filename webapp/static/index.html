@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dhaka Router</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="map" aria-label="Map of Dhaka"></div>
+
+  <aside class="panel" aria-label="Route planner">
+    <header class="brand">
+      <div><h1>Dhaka Router</h1><p id="graphStat">Loading road network…</p></div>
+      <span class="badge" id="liveBadge">Estimate</span>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" data-tab="route">Route</button>
+      <button class="tab" role="tab" data-tab="lab">Algorithm lab</button>
+      <button class="tab" role="tab" data-tab="traffic">Traffic</button>
+    </nav>
+
+    <section class="view" id="view-route">
+      <div class="places">
+        <div class="rail" aria-hidden="true"><i class="dot start"></i><b></b><i class="dot end"></i></div>
+        <div class="fields">
+          <div class="field">
+            <input id="fromInput" autocomplete="off" placeholder="Choose a start, or click the map" aria-label="Start">
+            <button class="icon" id="locate" title="Use my location" aria-label="Use my location">◎</button>
+            <div class="suggest" id="fromSuggest"></div>
+          </div>
+          <div class="field">
+            <input id="toInput" autocomplete="off" placeholder="Choose a destination" aria-label="Destination">
+            <div class="suggest" id="toSuggest"></div>
+          </div>
+        </div>
+        <button class="icon swap" id="swap" title="Swap start and destination" aria-label="Swap start and destination">⇅</button>
+      </div>
+      <div class="chips" id="presets"></div>
+
+      <div class="label">Travel by</div>
+      <div class="seg" id="profile">
+        <button data-v="car" class="on">Car</button>
+        <button data-v="transit">Metro + walk</button>
+        <button data-v="walk">Walk</button>
+      </div>
+
+      <div class="label">Optimize for</div>
+      <div class="seg" id="objective">
+        <button data-v="fastest" class="on">Fastest</button>
+        <button data-v="shortest">Shortest</button>
+        <button data-v="cheapest">Cheapest</button>
+        <button data-v="custom">Custom</button>
+      </div>
+      <div class="sliders" id="customBox" hidden>
+        <label>Distance <input type="range" id="wDistance" min="0" max="5" step=".5" value="1"><output></output></label>
+        <label>Time <input type="range" id="wTime" min="0" max="5" step=".5" value="2"><output></output></label>
+        <label>Cost <input type="range" id="wCost" min="0" max="5" step=".5" value="1"><output></output></label>
+      </div>
+
+      <div class="row">
+        <select id="algorithm" aria-label="Algorithm"></select>
+        <button class="ghost" id="blockBtn" aria-pressed="false">Close a road</button>
+      </div>
+      <div class="closures" id="closures" hidden>
+        <span id="closureText"></span><button id="clearBlocks">Clear</button>
+      </div>
+
+      <div id="results"></div>
+    </section>
+
+    <section class="view" id="view-lab" hidden>
+      <p class="intro">Each algorithm solves the same trip. Fewer roads explored means a smarter search, and every result must still cost the same.</p>
+      <button class="primary" id="raceBtn">Race the algorithms</button>
+      <div id="race"></div>
+    </section>
+
+    <section class="view" id="view-traffic" hidden>
+      <div class="sourceCard" id="sourceCard"></div>
+      <label class="switch"><input type="checkbox" id="showTraffic" checked><span>Show traffic on the map</span></label>
+      <div class="label">Departure time <strong id="hourLabel">Now</strong></div>
+      <input type="range" id="hour" min="0" max="23" step="1" aria-label="Departure hour">
+      <button class="ghost wide" id="nowBtn">Back to now</button>
+      <div class="legend"><span><i style="background:var(--free)"></i>Clear</span><span><i style="background:var(--slow)"></i>Slow</span><span><i style="background:var(--jam)"></i>Heavy</span></div>
+      <button class="primary" id="syncBtn" hidden>Sync live Google traffic</button>
+    </section>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
