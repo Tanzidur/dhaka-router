@@ -2,5 +2,5 @@
 .vscode/
 __pycache__/
 .env
-webapp/data/landmarks.npz
+data/landmarks.npz
 *.exe
